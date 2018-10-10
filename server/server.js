@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
-var {User} = require('./models/todo');
+var {User} = require('./models/user');
 
 var app = express();
 const port = process.env.PORT;
@@ -38,7 +38,7 @@ app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
     if (!ObjectID.isValid(id))
     {
-        return res.sendStatus(404).send();
+        return res.status(404).send();
     }
     Todo.findById(id).then((todo) => {
         if (!todo) {
@@ -46,7 +46,7 @@ app.get('/todos/:id', (req, res) => {
         }
         res.send({todo});
     }).catch((e) => {
-        res.sendStatus(400).send(e);
+        res.status(400).send(e);
     });
 });
 
@@ -55,7 +55,7 @@ app.delete('/todos/:id', (req, res) => {
 
     if (!ObjectID.isValid(id))
     {
-        return res.sendStatus(404).send();
+        return res.status(404).send();
     }
 
     Todo.findByIdAndRemove(id).then((todo) => {
@@ -64,7 +64,7 @@ app.delete('/todos/:id', (req, res) => {
         }
         res.send({todo});
     }).catch((e) => {
-        res.sendStatus(400).send();
+        res.status(400).send();
     });
 });
 
@@ -75,7 +75,7 @@ app.patch('/todos/:id', (req, res) => {
 
     if (!ObjectID.isValid(id))
     {
-        return res.sendStatus(404).send();
+        return res.status(404).send();
     }
 
     if (_.isBoolean(body.completed) && body.completed) {
@@ -87,12 +87,24 @@ app.patch('/todos/:id', (req, res) => {
 
     Todo.findByIdAndUpdate(id, {$set : body}, {new: true}).then((todo) => {
         if (!todo){
-            return res.sendStatus(404).send();
+            return res.status(404).send();
         }
         res.send({todo});
     }).catch((e) => {
-        res.sendStatus(404).send();
+        res.status(404).send();
     });
+});
+
+app.post('/users', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User(body);
+
+    user.save().then((user) => {
+        res.send(user);
+    }).catch((e) => {
+        res.status(400).send(e)
+    });
+
 });
 
 app.listen(port, () => {
