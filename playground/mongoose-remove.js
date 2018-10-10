@@ -4,15 +4,17 @@ const {mongoose} = require('./../server/db/mongoose');
 const {Todo} = require('./../server/models/todo');
 const {User} = require('./../server/models/user');
 
-/*
-Todo.remove({}).then((result) => {
-    console.log(result);
-});*/
+// Todo.remove({}).then((result) => {
+//   console.log(result);
+// });
 
-Todo.findOneAndRemove({_id: '5bbd3067fff1c9485846bcaa'}).then((result) => {
-    console.log(result);
-});
+// Todo.findOneAndRemove
+// Todo.findByIdAndRemove
 
-Todo.findByIdAndRemove('5bbd3067fff1c9485846bcaa').then((result) => {
-    console.log(result);
+// Todo.findOneAndRemove({_id: '57c4610dbb35fcbf6fda1154'}).then((todo) => {
+//
+// });
+
+Todo.findByIdAndRemove('57c4610dbb35fcbf6fda1154').then((todo) => {
+  console.log(todo);
 });
